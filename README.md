@@ -60,8 +60,8 @@ Warning
 The operator `=` can no longer do assignment for attributes and elements, the following will no longer work. Use `<-` instead.
 
 ``` r
-names(x) <- c("a", "b", "c")
-x[[2]] <- 32
+names(x) = c("a", "b", "c")
+x[[2]] = 32
 ```
 
 See also
