@@ -1,62 +1,59 @@
 
-
-args(`<-`)
-
-funcDef <- function (formals, body, .env = parent.frame()) {
-    env <- .env
-    cat("wtf")
-    body <- substitute(body)
-    f <- substitute(formals)
-    if (is.name(f)) {
-        name <- deparse(f)
-        args <- alist(... = )
-    }
-    else if (is.call(f)) {
-        name <- deparse(f[[1]])
-        args <- {
-            n <- lapply(as.list(f[-1]), function(x) deparse(x))
-            args <- rep(alist(xx = ), length(n))
-            names(args) <- n
-            args
+l2namedl <- function(lst) {
+    ans <- lst
+    for (i in seq_along(lst)) {
+        if (is.null(names(lst)) || names(lst)[[i]] == "") {
+            names(ans)[[i]] <- as.character(as.name(lst[[i]]))
+            ans[[i]] <- substitute()
         }
     }
-    else stop()
-
-    func <- pryr::make_function(args = args, body = body, env = env)
-    assign(name, func, envir = env)
+    ans
 }
 
+# terse_assign
+#' @export
+`=` <- function (left, right, envir = parent.frame()) {
+    left  <- substitute(left)
+    right <- substitute(right)
 
+    if (is.name(left))
+        return(invisible(eval(call("<-", left, right), envir = envir)))
+    if (is.call(left)) {
+        name <- as.character(as.name(left[[1]]))
 
-oper_init <- function (envir = parent.frame()) {
-    env <- envir
-    assign("=", value = funcDef, envir = env)
-    invisible(TRUE)
-}
+        # Some cases that may indicate an invalid use (todo: add more)
+        if (name %in% c("[", "[[", "[<-", "[[<-", "$", "$<-", "=", "<-", "@", "@<-"))
+            stop(sprintf("You are going to re-define %s, it is hightly likely a mistake", name))
+        if (name %in% c("names", "attributes", "dim", "dimnames", "colnames", "rownames"))
+            warning(sprintf("You are going to re-define %s, it is likely a mistake", name))
 
-oper_clear <- function (envir = parent.frame()) {
-    env <- envir
-    if (!identical(base::`=`, get("="))) {
-        rm(`=`, envir = env)
-        ans <- TRUE
+        args <- as.pairlist(l2namedl(as.list(left[-1])))
+        return(invisible(eval(call("<-", name, call("function", args, right)), envir = envir)))
     }
-    else
-        ans <- FALSE
-    invisible(ans)
+    stop()
 }
+
 
 if (FALSE) {
-    oper_init()
-    
+
+    x = 3
+
     f(x, y) = x + y
-    f(1,2)
-    
-    oper_clear()
-    
-    f(x, y) = x + y
+    f(2, 3)
+    identical(f, function(x, y) x + y)
+
+    g(x = 231) = log(x)
+    g()
+    identical(g, function(x = 231) log(x))
+
+    h(a, b = a^2) = a + b
+    h(1)
+    h(1, 2)
+    identical(h, function(a, b = a^2) a + b)
+
+    tan2(a) = sin(a)/cos(a)
+    gg(a) = sin(a)
+    gg(32)
 }
-
-
-
 
 
