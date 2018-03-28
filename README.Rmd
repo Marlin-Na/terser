@@ -1,0 +1,86 @@
+---
+output:
+  md_document:
+    variant: markdown_github
+---
+
+<!-- README.md is generated from README.Rmd. Please edit that file -->
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.path = "README-"
+)
+```
+
+# terser
+
+A natural and terse syntax of function declaration in R for people who are interested in
+shooting yourself in the foot.
+
+You can use `f(x, y) = x + y` to define a function `f`.
+
+```{r include=FALSE}
+library(terser)
+```
+
+```{r}
+f(x, y) = x + y
+f(3, 4)
+```
+
+
+> How... ?
+
+> Yes! I overwrite the `=` operator.
+
+If the left hand side is a symbol, it just does normal assignment like the `<-` operator.
+If the left hand side is a function call, it defines a function.
+
+Some more examples:
+
+```{r}
+x = 3
+x
+
+f(x, y) = x + y
+f(2, 3)
+identical(f, function(x, y) x + y)
+
+g(x = 231) = log(x)
+g()
+identical(g, function(x = 231) log(x))
+
+h(a, b = a^2) = a + b
+h(1)
+h(1, 2)
+identical(h, function(a, b = a^2) a + b)
+
+tan2(a) = sin(a)/cos(a)
+tan2(pi)
+
+`∑`(...) = sum(...)
+`∑`(2, 3, 4)
+```
+
+
+## Warning
+
+The operator `=` can no longer do assignment for attributes and elements, the following
+will no longer work. Use `<-` instead.
+
+```{r, eval=FALSE}
+names(x) = c("a", "b", "c")
+x[[2]] = 32
+```
+
+## See also
+
+This package is inspired by a syntax for defining a function in Julia.
+
+```
+julia> f(x, y) = x + y
+f (generic function with 1 method)
+```
+
