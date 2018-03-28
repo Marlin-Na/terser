@@ -24,6 +24,7 @@ l2namedl <- function(lst) {
 #'
 #' @param left A symbol or a function call.
 #' @param right A R expression as body of the function.
+#' @usage left = right
 #'
 #' @return The assigned value or function.
 #' @export

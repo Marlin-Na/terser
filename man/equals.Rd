@@ -4,7 +4,7 @@
 \alias{=}
 \title{Terser Function Declaration}
 \usage{
-"="(left, right)
+left = right
 }
 \arguments{
 \item{left}{A symbol or a function call.}
