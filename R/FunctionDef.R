@@ -11,10 +11,45 @@ l2namedl <- function(lst) {
 }
 
 # terse_assign
+#' Terser Function Declaration
+#'
+#' A terse syntax of function declaration for people who are interested in
+#' shooting yourself in the foot.
+#'
+#' If left hand side is a symbol, it just do normal assignment like \code{<-}.
+#'
+#' If left hand side is a function call, e.g. f(x, y), it creates a function named "f"
+#' which has formal arguments of "x", "y" and function body defined by the right hand side,
+#' in the environment calling it.
+#'
+#' @param left A symbol or a function call.
+#' @param right A R expression as body of the function.
+#'
+#' @return The assigned value or function.
 #' @export
-`=` <- function (left, right, envir = parent.frame()) {
+#' @examples
+#' x = 3
+#' x
+#'
+#' f(x, y) = x + y
+#' f(2, 3)
+#' identical(f, function(x, y) x + y)
+#'
+#' g(x = 231) = log(x)
+#' g()
+#' identical(g, function(x = 231) log(x))
+#'
+#' h(a, b = a^2) = a + b
+#' h(1)
+#' h(1, 2)
+#' identical(h, function(a, b = a^2) a + b)
+#'
+#' tan2(a) = sin(a)/cos(a)
+#' tan2(pi)
+`=` <- function (left, right) {
     left  <- substitute(left)
     right <- substitute(right)
+    envir <- parent.frame()
 
     if (is.name(left))
         return(invisible(eval(call("<-", left, right), envir = envir)))
@@ -32,28 +67,4 @@ l2namedl <- function(lst) {
     }
     stop()
 }
-
-
-if (FALSE) {
-
-    x = 3
-
-    f(x, y) = x + y
-    f(2, 3)
-    identical(f, function(x, y) x + y)
-
-    g(x = 231) = log(x)
-    g()
-    identical(g, function(x = 231) log(x))
-
-    h(a, b = a^2) = a + b
-    h(1)
-    h(1, 2)
-    identical(h, function(a, b = a^2) a + b)
-
-    tan2(a) = sin(a)/cos(a)
-    gg(a) = sin(a)
-    gg(32)
-}
-
 
