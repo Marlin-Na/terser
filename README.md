@@ -2,7 +2,7 @@
 terser
 ======
 
-A natural and terse syntax of function declaration in R for people who are interested in shooting yourself in the foot.
+A natural and terse syntax of function declaration in R for people who are interested in shooting yourself in the foot :gun:.
 
 You can use `f(x, y) = x + y` to define a function `f`.
 
@@ -11,6 +11,8 @@ f(x, y) = x + y
 f(3, 4)
 #> [1] 7
 ```
+
+![](https://user-images.githubusercontent.com/9980776/38043325-64bae8ec-32e9-11e8-955c-b7fbae468212.gif)
 
 > How... ?
 
